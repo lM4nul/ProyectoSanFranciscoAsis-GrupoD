@@ -43,7 +43,7 @@
         </div>
         <div class="row my-3">
             <label class="col-12 col-m-5 col-l-4" for="prodimagen">Imagen (url)</label>
-            <input {{readonly}} class="col-12 col-m-7 col-l-8" type="url" name="prodimagen" value="{{prodimagen}}"
+            <input {{readonly}} class="col-12 col-m-7 col-l-8" type="text" name="prodimagen" value="{{prodimagen}}"
                 id="prodimagen" />
         </div>
         <div class="row my-3">
