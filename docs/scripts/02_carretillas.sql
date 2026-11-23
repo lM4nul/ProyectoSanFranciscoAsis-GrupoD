@@ -1,36 +1,22 @@
-CREATE TABLE
-    `products` (
-        `productId` int(11) NOT NULL AUTO_INCREMENT,
-        `productName` varchar(255) NOT NULL,
-        `productDescription` text NOT NULL,
-        `productPrice` decimal(10, 2) NOT NULL,
-        `productImgUrl` varchar(255) NOT NULL,
-        `productStock` int(11) NOT NULL DEFAULT 0,
-        `productStatus` char(3) NOT NULL,
-        PRIMARY KEY (`productId`)
-    ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4;
+use clinica;
+-- Categorías de los productos de la tienda
+CREATE TABLE categoria (
+  catcod BIGINT AUTO_INCREMENT PRIMARY KEY,
+  catnombre VARCHAR(80) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-    `carretilla` (
-        `usercod` BIGINT(10) NOT NULL,
-        `productId` int(11) NOT NULL,
-        `crrctd` INT(5) NOT NULL,
-        `crrprc` DECIMAL(12, 2) NOT NULL,
-        `crrfching` DATETIME NOT NULL,
-        PRIMARY KEY (`usercod`, `productId`),
-        INDEX `productId_idx` (`productId` ASC),
-        CONSTRAINT `carretilla_user_key` FOREIGN KEY (`usercod`) REFERENCES `usuario` (`usercod`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT `carretilla_prd_key` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-    );
-
-CREATE TABLE
-    `carretillaanon` (
-        `anoncod` varchar(128) NOT NULL,
-        `productId` bigint(18) NOT NULL,
-        `crrctd` int(5) NOT NULL,
-        `crrprc` decimal(12, 2) NOT NULL,
-        `crrfching` datetime NOT NULL,
-        PRIMARY KEY (`anoncod`, `productId`),
-        KEY `productId_idx` (`productId`),
-        CONSTRAINT `carretillaanon_prd_key` FOREIGN KEY (`productId`) REFERENCES `products` (`productId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-    );
+-- Productos que se venden en la tienda (medicamentos e insumos por igual)
+CREATE TABLE producto (
+  prodcod BIGINT AUTO_INCREMENT PRIMARY KEY,
+  catcod BIGINT NOT NULL,
+  prodnombre VARCHAR(120) NOT NULL,
+  proddescripcion TEXT NULL,
+  prodprincipio VARCHAR(120) NULL,         -- principio activo (solo si aplica)
+  prodpresentacion VARCHAR(120) NULL,      -- por ejemplo: caja con 10 tabletas
+  prodrequiereceta BOOLEAN NOT NULL DEFAULT FALSE,
+  prodprecio DECIMAL(10,2) NOT NULL,
+  prodimagen VARCHAR(255) NULL,
+  prodest CHAR(3) NOT NULL DEFAULT 'ACT',
+  CONSTRAINT producto_categoria_fk FOREIGN KEY (catcod) REFERENCES categoria (catcod),
+  CONSTRAINT chk_producto_precio CHECK (prodprecio >= 0)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
